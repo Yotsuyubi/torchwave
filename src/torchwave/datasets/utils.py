@@ -17,26 +17,20 @@ def load(filename, *, sr=22050, mono=True, duration=None, offset=0):
         offset (int or float, optional): for numpy file: length of samples. offset must be type of 'int'
                                            for audio file: offset of audio samples.
                                            Default: 0
+    Returns:
+        signal (numpy.array)
     """
+
     signal = np.array([])
     filename = safe_path(filename)
     _, ext = os.path.splitext(filename) # get file extention
+
     try:
         if duration is not None and duration < 0:
             raise ValueError('`duration` must be positive int or float.')
 
         if ext == '.npy': # if file which loading is numpy format.
-            duration = offset+duration if duration is not None else None
-            signal = np.load(filename)
-
-            # error / warn handling
-            if len(signal) < offset:
-                raise IndexError('`offset` out of range.')
-            if duration is not None and duration > len(signal):
-                warnings.warn('`duration` out of range. it fixed to None.', UserWarning)
-                duration = None
-
-            signal = signal[offset:duration]
+            signal = _load_npy(filename, duration, offset)
 
         else: # if file which loading is audio format.
             signal, _ = librosa.load(
@@ -53,6 +47,21 @@ def load(filename, *, sr=22050, mono=True, duration=None, offset=0):
 
     return signal
 
+
+def _load_npy(filename, duration, offset):
+    duration = offset+duration if duration is not None else None
+    signal = np.load(filename)
+
+    # error / warn handling
+    if len(signal) < offset:
+        raise IndexError('`offset` out of range.')
+    if duration is not None and duration > len(signal):
+        warnings.warn('`duration` out of range. it fixed to None.', UserWarning)
+        duration = None
+
+    signal = signal[offset:duration]
+    return signal
+
 def safe_path(path):
     """Ensure the path is absolute and doesn't include `..` or `~`.
        site: 'https://github.com/audeering/audtorch/blob/0.4.1/audtorch/datasets/utils.py#L359'
@@ -61,4 +70,5 @@ def safe_path(path):
     Returns:
         str: absolute path
     """
+
     return os.path.abspath(os.path.expanduser(path))
