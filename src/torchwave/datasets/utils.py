@@ -1,10 +1,17 @@
 import numpy as np
 import librosa
 import os
-import warnings
+from warnings import warn
+from typing import Union, NewType, Optional
+
+Path = NewType('Path', str)
 
 
-def load(filename, *, sr=22050, mono=True, duration=None, offset=0):
+def load(filename: str, *,
+            sr: int=22050,
+            mono: bool=True,
+            duration: Union[int, float, None]=None,
+            offset: Union[int, float]=0):
     """Load audio file either npy file.
     Args:
         filename (str): filename to load.
@@ -21,7 +28,7 @@ def load(filename, *, sr=22050, mono=True, duration=None, offset=0):
         signal (numpy.array)
     """
 
-    signal = np.array([])
+    signal: np.ndarray[np.float64] = np.array([.0])
     filename = safe_path(filename)
     _, ext = os.path.splitext(filename) # get file extention
 
@@ -30,7 +37,11 @@ def load(filename, *, sr=22050, mono=True, duration=None, offset=0):
             raise ValueError('`duration` must be positive int or float.')
 
         if ext == '.npy': # if file which loading is numpy format.
-            signal = _load_npy(filename, duration, offset)
+            if (duration is not None and type(duration) is not int) or type(offset) is not int:
+                raise TypeError('`duration` and `offset` must be int.')
+            d: Union[int, None] = int(duration) if type(duration) is int else None
+            o: int = int(offset)
+            signal = _load_npy(filename, duration=d, offset=o)
 
         else: # if file which loading is audio format.
             signal, _ = librosa.load(
@@ -48,21 +59,23 @@ def load(filename, *, sr=22050, mono=True, duration=None, offset=0):
     return signal
 
 
-def _load_npy(filename, duration, offset):
+def _load_npy(filename: Path,
+                duration: Optional[int]=None,
+                offset: int=0):
     duration = offset+duration if duration is not None else None
-    signal = np.load(filename)
+    signal: np.ndarray[np.float64] = np.array(np.load(filename), dtype=np.float64)
 
     # error / warn handling
     if len(signal) < offset:
         raise IndexError('`offset` out of range.')
     if duration is not None and duration > len(signal):
-        warnings.warn('`duration` out of range. it fixed to None.', UserWarning)
+        warn('`duration` out of range. it fixed to None.', UserWarning)
         duration = None
 
     signal = signal[offset:duration]
     return signal
 
-def safe_path(path):
+def safe_path(path: str) -> Path:
     """Ensure the path is absolute and doesn't include `..` or `~`.
        site: 'https://github.com/audeering/audtorch/blob/0.4.1/audtorch/datasets/utils.py#L359'
     Args:
@@ -71,4 +84,4 @@ def safe_path(path):
         str: absolute path
     """
 
-    return os.path.abspath(os.path.expanduser(path))
+    return Path(os.path.abspath(os.path.expanduser(path)))

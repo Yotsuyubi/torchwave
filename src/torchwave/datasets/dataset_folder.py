@@ -1,0 +1,77 @@
+from torch.utils.data import Dataset
+import glob
+import re
+import numpy as np
+from typing import Union, NewType, Optional, List, Any, Callable
+from .utils import load
+import torch
+
+Path = str
+Transform = Callable[[np.ndarray[np.float64]], np.ndarray[np.float64]]
+Signal = np.ndarray[np.float64]
+
+
+class DatasetFolder(Dataset):
+    """Load npy or audio files from folder
+    Args:
+        root (str): root path of files.
+        transform (torch transform, optional): Default `None`
+        one_hot (bool, optional): return label as one-hot array or not.
+                                  Default `false`
+    """
+    def __init__(self,
+                root: Path, *,
+                transform: Optional[Transform]=None,
+                one_hot: bool=False) -> None:
+        super(DatasetFolder, self).__init__()
+
+        self.root: Path = root
+        self.classes: List[str] = self._filename_to_classes()
+        self.is_one_hot: bool = one_hot
+        self.filenames: List[Path] = glob.glob(self.root+'/**/*')
+        self.transform: Optional[Transform] = transform
+
+    def __len__(self) -> int:
+        return len(self.filenames)
+
+    def __getitem__(self, idx: int):
+        filename: Path = self.filenames[idx]
+        data: Signal = load(filename)
+        label: str = self._get_class(filename)
+
+        if self.transform is not None:
+            datas: List[Signal] = []
+            for d in data:
+                transformed_signal: Signal = self.transform(d)
+                datas.append(transformed_signal)
+            data = np.concatenate(datas, 0)
+
+        y = self.classes.index(label)
+        if self.is_one_hot is True:
+            y = np.eye(len(self.classes))[self.classes.index(label)]
+
+        return data, y
+
+    def index_to_class(self, index: int) -> str:
+        """get class name of index given
+        Args:
+            index (int): index of classes
+        Returns:
+            class (str): class name
+        """
+        return self.classes[index]
+
+    def _filename_to_classes(self) -> List[str]:
+        """get classes from filenames
+        """
+        l = glob.glob(self.root+'/**/')
+        labels = [dir.replace(self.root, '') for dir in l]
+        labels = [dir.replace('/', '') for dir in labels]
+        labels = [re.sub(r'\.[a-z0-9]+', '', dir) for dir in labels]
+        return labels
+
+    def _get_class(self, filename: Path) -> str:
+        dir_fn = filename.replace(self.root, '')
+        dir = re.sub(r'/[a-z0-9_]+\.[a-z]+', '', dir_fn)
+        dir = dir.replace('/', '')
+        return dir
