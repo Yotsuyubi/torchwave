@@ -7,8 +7,8 @@ from .utils import load
 import torch
 
 Path = str
-Transform = Callable[[np.ndarray[np.float64]], np.ndarray[np.float64]]
-Signal = np.ndarray[np.float64]
+Transform = Any
+Signal = Any
 
 
 class DatasetFolder(Dataset):
