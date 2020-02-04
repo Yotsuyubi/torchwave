@@ -4,3 +4,4 @@ from .normalize import *
 from .stft import *
 from .crop import *
 from .random_crop import *
+from .melspectrogram import *
