@@ -5,3 +5,4 @@ from .stft import *
 from .crop import *
 from .random_crop import *
 from .melspectrogram import *
+from .time_stretch import *
