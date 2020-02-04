@@ -39,7 +39,11 @@ class DatasetFolder(Dataset):
         data: Signal = load(filename)
         label: str = self._get_class(filename)
 
-        if self.transform is not None:
+        if len(data.shape) < 2:
+            # expand channel for time-series data
+            data = np.expand_dims(data, 0)
+
+        if self.transform is not None: # apply transform for each channels
             datas: List[Signal] = []
             for d in data:
                 transformed_signal: Signal = self.transform(d)
