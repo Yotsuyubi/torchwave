@@ -7,7 +7,8 @@ from typing import Union, NewType, Optional, List, Any, Callable
 
 
 class Wavelet(object):
-    """Mother Wavelet for pytorch transform
+    """Mother Wavelet
+    Mother Wavelet for pytorch transform
     Args:
         sampling_rate (int, optional): sampling rate of input signal.
                                        `None` to be same as inputed data.
