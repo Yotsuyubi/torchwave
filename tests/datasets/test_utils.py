@@ -54,5 +54,5 @@ def test_download_file():
 def test_extract():
     os.makedirs('./data')
     filename = download_file('http://nginx.org/download/nginx-0.1.0.tar.gz', './data')
-    extract(filename)
+    assert extract(filename) == safe_path('./data/nginx-0.1.0')
     shutil.rmtree('./data')

@@ -5,6 +5,7 @@ from warnings import warn
 from typing import Union, NewType, Optional
 import requests
 import tarfile
+import pathlib
 
 Path = NewType('Path', str)
 
@@ -74,8 +75,13 @@ def download_file(url, path='./'):
     return local_filename
 
 def extract(filename):
+    dirname = os.path.dirname(filename)
+    basename_without_ext = pathlib.Path(filename).resolve().stem
+    basename_without_ext = pathlib.Path(basename_without_ext).resolve().stem
     with tarfile.open(filename, 'r:*') as tar:
-        tar.extractall(os.path.dirname(filename))
+        tar.extractall(dirname)
+        os.remove(filename)
+    return dirname+'/'+basename_without_ext
 
 def _load_npy(filename: Path,
                 duration: Optional[int]=None,
