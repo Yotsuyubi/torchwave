@@ -1,8 +1,9 @@
-from torchwave.datasets.utils import load, download_file, safe_path
+from torchwave.datasets.utils import load, download_file, safe_path, extract
 import numpy as np
 import scipy.io.wavfile as siw
 import pytest
 import os
+import shutil
 
 
 def test_load_npy():
@@ -49,3 +50,9 @@ def test_download_file():
     assert filename == safe_path('./data/nginx-0.1.0.tar.gz')
     os.remove(filename)
     os.rmdir('./data')
+
+def test_extract():
+    os.makedirs('./data')
+    filename = download_file('http://nginx.org/download/nginx-0.1.0.tar.gz', './data')
+    extract(filename)
+    shutil.rmtree('./data')

@@ -4,6 +4,7 @@ import os
 from warnings import warn
 from typing import Union, NewType, Optional
 import requests
+import tarfile
 
 Path = NewType('Path', str)
 
@@ -71,6 +72,10 @@ def download_file(url, path='./'):
                 f.write(chunk)
                 f.flush()
     return local_filename
+
+def extract(filename):
+    with tarfile.open(filename, 'r:*') as tar:
+        tar.extractall(os.path.dirname(filename))
 
 def _load_npy(filename: Path,
                 duration: Optional[int]=None,
