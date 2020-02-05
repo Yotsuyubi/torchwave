@@ -9,3 +9,4 @@ from .time_stretch import *
 from .random_apply import *
 from .peaking_filter import *
 from .random_peaking_filter import *
+from .repeat import *
