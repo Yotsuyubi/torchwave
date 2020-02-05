@@ -12,7 +12,7 @@ def test_init_PeakingFilter():
 
 def test_process_PeakingFilter():
     noise = np.random.randn(22050)
-    filtered = PeakingFilter(1000, 1, 3)(noise)
+    filtered = PeakingFilter(1000, 0.1, 3)(noise)
     assert filtered.shape == (22050,)
 
     with pytest.raises(ValueError):

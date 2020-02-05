@@ -26,7 +26,7 @@ class PeakingFilter(object):
     def _peaking_eq(self, q: float, gain: float, f: float, fs: int):
         if f > fs/2 or f < 0:
             raise ValueError('`f` should be less than `fs/2` and potisive float.')
-        if int(q) < 1 or q > 24:
+        if q <= 0 or q > 24:
             raise ValueError('`q` should be less than `24` and positive float but not `0`.')
         if gain < -24 or gain > 24:
             raise ValueError('`gain` should be less than `24` and grater than `-24`.')
