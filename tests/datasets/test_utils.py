@@ -1,7 +1,8 @@
-from torchwave.datasets.utils import load
+from torchwave.datasets.utils import load, download_file, safe_path
 import numpy as np
 import scipy.io.wavfile as siw
 import pytest
+import os
 
 
 def test_load_npy():
@@ -37,3 +38,14 @@ def test_load_audio():
 
     # with pytest.raises(ValueError):
     print(load('./test.wav', offset=0))
+
+def test_download_file():
+    filename = download_file('http://nginx.org/download/nginx-0.1.0.tar.gz')
+    assert filename == safe_path('./nginx-0.1.0.tar.gz')
+    os.remove(filename)
+
+    os.makedirs('./data')
+    filename = download_file('http://nginx.org/download/nginx-0.1.0.tar.gz', './data')
+    assert filename == safe_path('./data/nginx-0.1.0.tar.gz')
+    os.remove(filename)
+    os.rmdir('./data')

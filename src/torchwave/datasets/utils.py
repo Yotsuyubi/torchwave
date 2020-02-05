@@ -3,6 +3,7 @@ import librosa
 import os
 from warnings import warn
 from typing import Union, NewType, Optional
+import requests
 
 Path = NewType('Path', str)
 
@@ -58,6 +59,18 @@ def load(filename: str, *,
 
     return signal
 
+def download_file(url, path='./'):
+    root_path = safe_path(path)
+    local_filename = url.split('/')[-1]
+    local_filename = safe_path(root_path+'/'+local_filename)
+    # NOTE the stream=True parameter
+    r = requests.get(url, stream=True)
+    with open(local_filename, 'wb') as f:
+        for chunk in r.iter_content(chunk_size=1024):
+            if chunk: # filter out keep-alive new chunks
+                f.write(chunk)
+                f.flush()
+    return local_filename
 
 def _load_npy(filename: Path,
                 duration: Optional[int]=None,
@@ -84,4 +97,4 @@ def safe_path(path: str) -> Path:
         str: absolute path
     """
 
-    return Path(os.path.abspath(os.path.expanduser(path)))
+    return os.path.abspath(os.path.expanduser(path))
