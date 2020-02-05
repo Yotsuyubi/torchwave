@@ -26,8 +26,8 @@ class PeakingFilter(object):
     def _peaking_eq(self, q: float, gain: float, f: float, fs: int):
         if f > fs/2 or f < 0:
             raise ValueError('`f` should be less than `fs/2` and potisive float.')
-        if q < 0 or q > 24:
-            raise ValueError('`q` should be less than `24` and positive float.')
+        if int(q) < 1 or q > 24:
+            raise ValueError('`q` should be less than `24` and positive float but not `0`.')
         if gain < -24 or gain > 24:
             raise ValueError('`gain` should be less than `24` and grater than `-24`.')
 
@@ -38,7 +38,7 @@ class PeakingFilter(object):
         b = [(1.0 + alpha * A), (-2.0 * np.cos(w0)), (1.0 - alpha * A)]
         a = [(1.0 + alpha / A), (-2.0 * np.cos(w0)), (1.0 - alpha / A)]
 
-        return (np.array(b) / a[0]), (np.array(a) / a[0])
+        return np.array(b), np.array(a)
 
     def _apply(self, b, a, x):
         y = []
