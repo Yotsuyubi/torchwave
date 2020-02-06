@@ -76,6 +76,6 @@ class DatasetFolder(Dataset):
 
     def _get_class(self, filename: Path) -> str:
         dir_fn = filename.replace(self.root, '')
-        dir = re.sub(r'/[a-z0-9_]+\.[a-z]+', '', dir_fn)
+        dir = re.match(r'/[a-z0-9]+/', dir_fn).group()
         dir = dir.replace('/', '')
         return dir

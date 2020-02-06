@@ -15,6 +15,7 @@ torch = "*"
 librosa = "*"
 scipy = "*"
 torchwave = {path = "."}
+tqdm = "*"
 
 [requires]
 python_version = "3.7"

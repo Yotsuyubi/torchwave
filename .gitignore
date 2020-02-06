@@ -170,3 +170,5 @@ pip-wheel-metadata/
 
 *.npy
 *.wav
+
+example/data/*

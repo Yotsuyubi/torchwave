@@ -6,6 +6,7 @@ from typing import Union, NewType, Optional
 import requests
 import tarfile
 import pathlib
+from tqdm import tqdm
 
 Path = NewType('Path', str)
 
@@ -67,21 +68,37 @@ def download_file(url, path='./'):
     local_filename = safe_path(root_path+'/'+local_filename)
     # NOTE the stream=True parameter
     r = requests.get(url, stream=True)
+    file_size = int(requests.head(url).headers["content-length"])
+    pbar = tqdm(total=file_size, unit="B", unit_scale=True)
+    print('Download from {}...'.format(url))
     with open(local_filename, 'wb') as f:
         for chunk in r.iter_content(chunk_size=1024):
             if chunk: # filter out keep-alive new chunks
                 f.write(chunk)
                 f.flush()
+                pbar.update(len(chunk))
+        pbar.close()
     return local_filename
 
 def extract(filename):
     dirname = os.path.dirname(filename)
-    basename_without_ext = pathlib.Path(filename).resolve().stem
-    basename_without_ext = pathlib.Path(basename_without_ext).resolve().stem
+    basename = basename_without_ext(filename)
     with tarfile.open(filename, 'r:*') as tar:
         tar.extractall(dirname)
         os.remove(filename)
-    return dirname+'/'+basename_without_ext
+    return dirname+'/'+basename
+
+def basename_without_ext(path):
+    basename_without_ext = pathlib.Path(path).resolve().stem
+    basename_without_ext = pathlib.Path(basename_without_ext).resolve().stem
+    return basename_without_ext
+
+def download_dataset(url, path='./'):
+    dirname = safe_path(path)+'/'+basename_without_ext(url)
+    if os.path.exists(dirname) is False:
+        local_filename = download_file(url, path)
+        dirname = extract(local_filename)
+    return dirname
 
 def _load_npy(filename: Path,
                 duration: Optional[int]=None,
