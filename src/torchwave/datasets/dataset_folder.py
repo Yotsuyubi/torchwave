@@ -53,6 +53,7 @@ class DatasetFolder(Dataset):
         y = self.classes.index(label)
         if self.is_one_hot is True:
             y = np.eye(len(self.classes))[self.classes.index(label)]
+            y = y.astype(np.float32)
 
         return data, y
 

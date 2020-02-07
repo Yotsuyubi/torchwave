@@ -20,7 +20,7 @@ class Mixup(Dataset):
         super(Mixup, self).__init__()
 
         self.org_dataset = dataset
-        self.org_dataset.one_hot = True
+        self.org_dataset.is_one_hot = True
         self.dataset_len = len(self.org_dataset)//2
         self.A, self.B = random_split(self.org_dataset, [self.dataset_len, self.dataset_len])
 
