@@ -15,3 +15,4 @@ from .random_time_stretch import *
 from .clip import *
 from .random_clip import *
 from .time_shift import *
+from .random_time_shift import *
