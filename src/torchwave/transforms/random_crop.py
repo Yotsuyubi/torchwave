@@ -13,11 +13,11 @@ class RandomCrop(object):
         numpy.ndarray with shape (length).
     """
     def __init__(self,
-                length: int):
-        self.length: int = length
+                length: Optional[int]=None):
+        self.length: int = length if length is not None else 0
 
     def __call__(self, data):
-        start = np.random.randint(0, len(data)-self.length)
+        start = np.random.randint(0, np.abs(len(data)-self.length))
         if self.length < 0:
             raise ValueError('`length` must be positive int.')
         if len(data)-self.length < 0:
