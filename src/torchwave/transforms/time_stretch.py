@@ -1,4 +1,5 @@
 from librosa.effects import time_stretch
+import numpy as np
 
 
 class TimeStretch(object):
@@ -16,5 +17,10 @@ class TimeStretch(object):
         self.rate: float = rate
 
     def __call__(self, data):
+        original_len = len(data)
         time_stretched = time_stretch(data, self.rate)
+        if len(time_stretched) < original_len:
+            time_stretched = np.pad(time_stretched, (0, max(0, original_len-len(time_stretched))), "constant")
+        else:
+            time_stretched = time_stretched[:original_len]
         return time_stretched
