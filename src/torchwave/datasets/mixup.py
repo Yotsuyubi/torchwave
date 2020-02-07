@@ -33,4 +33,4 @@ class Mixup(Dataset):
         alpha = np.random.rand()
         data = alpha*sig_A+(1-alpha)*sig_B
         label = alpha*label_A+(1-alpha)*label_B
-        return data, label
+        return data, label.astype(np.float32)
