@@ -41,9 +41,9 @@ class RandomAugmentation(object):
         if self.clip is not None:
             x = RandomClip(self.clip)
         if self.peaking_filter is not None:
-            f = self.peaking_filter.f
-            q = self.peaking_filter.q
-            gain = self.peaking_filter.gain
+            f = self.peaking_filter['f']
+            q = self.peaking_filter['q']
+            gain = self.peaking_filter['gain']
             x = RandomPeakingFilter(f, q, gain)
         if self.time_shift is not None:
             x = RandomTimeShift(self.time_shift)
