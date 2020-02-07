@@ -37,17 +37,17 @@ class RandomAugmentation(object):
         x = data
 
         if self.crop is not None:
-            x = RandomCrop(self.crop)
+            x = RandomCrop(self.crop)(x)
         if self.clip is not None:
-            x = RandomClip(self.clip)
+            x = RandomClip(self.clip)(x)
         if self.peaking_filter is not None:
             f = self.peaking_filter['f']
             q = self.peaking_filter['q']
             gain = self.peaking_filter['gain']
-            x = RandomPeakingFilter(f, q, gain)
+            x = RandomPeakingFilter(f, q, gain)(x)
         if self.time_shift is not None:
-            x = RandomTimeShift(self.time_shift)
+            x = RandomTimeShift(self.time_shift)(x)
         if self.time_stretch is not None:
-            x = RandomTimeStretch(self.time_stretch)
+            x = RandomTimeStretch(self.time_stretch)(x)
 
         return x
