@@ -55,7 +55,7 @@ class DatasetFolder(Dataset):
             y = np.eye(len(self.classes))[self.classes.index(label)]
             y = y.astype(np.float32)
 
-        return data, y
+        return data, torch.tensor(y).float()
 
     def index_to_class(self, index: int) -> str:
         """get class name of index given
