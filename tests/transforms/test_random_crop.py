@@ -3,10 +3,6 @@ import numpy as np
 import pytest
 import math
 
-def test_init_RandomCrop():
-    with pytest.raises(TypeError):
-        RandomCrop()
-
 
 def test_process_RandomCrop():
     noise = np.random.randn(2048)

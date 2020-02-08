@@ -17,3 +17,4 @@ from .random_clip import *
 from .time_shift import *
 from .random_time_shift import *
 from .random_augmentation import *
+from .random_noise import *

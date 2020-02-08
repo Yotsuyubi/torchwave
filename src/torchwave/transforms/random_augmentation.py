@@ -4,7 +4,7 @@ from .random_clip import RandomClip
 from .random_peaking_filter import RandomPeakingFilter
 from .random_time_shift import RandomTimeShift
 from .random_time_stretch import RandomTimeStretch
-from .repeat import Repeat
+from .random_noise import RandomNoise
 
 
 
@@ -20,11 +20,13 @@ class RandomAugmentation(object):
         numpy.ndarray with shape (length).
     """
     def __init__(self,
+                noise=None,
                 clip=None,
                 peaking_filter=None,
                 time_shift=None,
                 time_stretch=None,
                 p=1.0):
+        self.noise = noise
         self.clip = clip
         self.peaking_filter = peaking_filter
         self.time_shift = time_shift
@@ -34,6 +36,8 @@ class RandomAugmentation(object):
     def __call__(self, data):
         x = data
 
+        if self.noise is not None and np.random.rand() < self.p:
+            x = RandomNoise(self.noise)(x)
         if self.clip is not None and np.random.rand() < self.p:
             x = RandomClip(self.clip)(x)
         if self.peaking_filter is not None and np.random.rand() < self.p:
