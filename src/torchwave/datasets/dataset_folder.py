@@ -51,11 +51,12 @@ class DatasetFolder(Dataset):
             data = np.concatenate(datas, 0)
 
         y = self.classes.index(label)
+        y = torch.tensor(y).long()
         if self.is_one_hot is True:
             y = np.eye(len(self.classes))[self.classes.index(label)]
-            y = y.astype(np.float32)
+            y = torch.tensor(y).float()
 
-        return data, torch.tensor(y).float()
+        return data, y
 
     def index_to_class(self, index: int) -> str:
         """get class name of index given
