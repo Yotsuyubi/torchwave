@@ -43,6 +43,11 @@ class EMDMixup(Dataset):
         f_0 = self._random_pick(label)
         d = load(f_0)
 
+        if len(d) < len(data):
+            data = data[:len(d)]
+        else:
+            d = d[:len(data)]
+
         emd = EMD()
         emd.FIXE = 5
         imf_0 = emd(data, max_imf=5)
