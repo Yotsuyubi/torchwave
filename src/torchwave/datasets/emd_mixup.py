@@ -34,7 +34,7 @@ class EMDMixup(Dataset):
         y = self.dataset.classes.index(label)
         y = torch.tensor(y).long()
         if self.dataset.is_one_hot is True:
-            y = np.eye(len(self.classes))[self.dataset.classes.index(label)]
+            y = np.eye(len(self.dataset.classes))[self.dataset.classes.index(label)]
             y = torch.tensor(y).float()
 
         return data, y
