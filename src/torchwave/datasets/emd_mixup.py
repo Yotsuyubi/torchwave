@@ -11,6 +11,9 @@ class EMDMixup(Dataset):
         self.dataset = dataset
         self.p = p
 
+    def __len__(self):
+        return self.dataset.__len__()
+
     def __getitem__(self, idx):
         filename = self.dataset.filenames[idx]
         data = load(filename)
