@@ -58,7 +58,7 @@ class EMDMixup(Dataset):
         return data
 
     def _random_pick(self, label):
-        filenames = self.dataset.filenames
+        filenames = self.dataset.filenames[:] # deepcopy
         np.random.shuffle(filenames)
         for f in filenames:
             l = self.dataset._get_class(f)
