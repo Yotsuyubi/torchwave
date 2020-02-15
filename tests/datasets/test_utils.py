@@ -23,6 +23,8 @@ def test_load_npy():
     with pytest.warns(UserWarning):
         load('./test.npy', offset=3, duration=8)
 
+    os.remove('./test.npy')
+
 def test_load_audio():
     # gen wav
     noise = np.random.randn(22050)
@@ -37,8 +39,7 @@ def test_load_audio():
     assert load('./test.wav', offset=0.2, duration=0.5).shape == (22050//2,)
     assert load('./test.wav', mono=False).shape == (2, 22050)
 
-    # with pytest.raises(ValueError):
-    print(load('./test.wav', offset=0))
+    os.remove('./test.wav')
 
 def test_download_file():
     filename = download_file('http://nginx.org/download/nginx-0.1.0.tar.gz')
