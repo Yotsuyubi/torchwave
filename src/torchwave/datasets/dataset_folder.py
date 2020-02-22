@@ -22,7 +22,8 @@ class DatasetFolder(Dataset):
     def __init__(self,
                 root: Path, *,
                 transform: Optional[Transform]=None,
-                one_hot: bool=False) -> None:
+                one_hot: bool=False,
+                label: bool=True) -> None:
         super(DatasetFolder, self).__init__()
 
         self.root: Path = root
@@ -30,6 +31,7 @@ class DatasetFolder(Dataset):
         self.is_one_hot: bool = one_hot
         self.filenames: List[Path] = glob.glob(self.root+'/**/*')
         self.transform: Optional[Transform] = transform
+        self.label = label
 
     def __len__(self) -> int:
         return len(self.filenames)
@@ -37,7 +39,6 @@ class DatasetFolder(Dataset):
     def __getitem__(self, idx: int):
         filename: Path = self.filenames[idx]
         data: Signal = load(filename)
-        label: str = self._get_class(filename)
 
         if len(data.shape) < 2:
             # expand channel for time-series data
@@ -50,13 +51,16 @@ class DatasetFolder(Dataset):
                 datas.append(transformed_signal)
             data = np.concatenate(datas, 0)
 
-        y = self.classes.index(label)
-        y = torch.tensor(y).long()
-        if self.is_one_hot is True:
-            y = np.eye(len(self.classes))[self.classes.index(label)]
-            y = torch.tensor(y).float()
-
-        return data, y
+        if self.label is True:
+            label: str = self._get_class(filename)
+            y = self.classes.index(label)
+            y = torch.tensor(y).long()
+            if self.is_one_hot is True:
+                y = np.eye(len(self.classes))[self.classes.index(label)]
+                y = torch.tensor(y).float()
+            return data, y
+        else:
+            return data, torch.tensor([0]).long()
 
     def index_to_class(self, index: int) -> str:
         """get class name of index given

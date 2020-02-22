@@ -1,5 +1,5 @@
 from torch.utils.data import Dataset
-from torchwave.datasets.utils import load
+from torchwave.datasets.utils import load, match_length
 import numpy as np
 import torch
 from PyEMD import EMD
@@ -43,10 +43,7 @@ class EMDMixup(Dataset):
         f_0 = self._random_pick(label)
         d = load(f_0)
 
-        if len(d) < len(data):
-            data = data[:len(d)]
-        else:
-            d = d[:len(data)]
+        data, d = match_length(data, d)
 
         emd = EMD()
         emd.FIXE = 5

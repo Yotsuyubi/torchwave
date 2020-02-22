@@ -126,3 +126,12 @@ def safe_path(path: str) -> Path:
     """
 
     return os.path.abspath(os.path.expanduser(path))
+
+def match_length(sig_a, sig_b):
+    a_len = len(sig_a)
+    b_len = len(sig_b)
+    if a_len < b_len:
+        sig_b = sig_b[:a_len]
+    else:
+        sig_a = sig_a[:b_len]
+    return sig_a, sig_b

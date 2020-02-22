@@ -3,3 +3,4 @@ from .utils import *
 from .gtzan import *
 from .mixup import *
 from .emd_mixup import *
+from .remix import *
