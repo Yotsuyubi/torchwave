@@ -18,6 +18,8 @@ class EMDMixup(Dataset):
     def __getitem__(self, idx):
         filename = self.dataset.filenames[idx]
         data = load(filename)
+        if self.pretransform is not None:
+            data = self.pretransform(data)
         label = self.dataset._get_class(filename)
         data = self._emd(data, label) if np.random.rand() < self.p else data
 
@@ -45,7 +47,6 @@ class EMDMixup(Dataset):
         d = load(f_0)
 
         if self.pretransform is not None:
-            data = self.pretransform(data)
             d = self.pretransform(d)
 
         data, d = match_length(data, d)
