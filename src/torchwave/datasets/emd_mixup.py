@@ -6,10 +6,11 @@ from PyEMD import EMD
 
 
 class EMDMixup(Dataset):
-    def __init__(self, dataset, *, p=1.0):
+    def __init__(self, dataset, *, p=1.0, pretransform=None):
         super().__init__()
         self.dataset = dataset
         self.p = p
+        self.pretransform = pretransform
 
     def __len__(self):
         return self.dataset.__len__()
@@ -42,6 +43,10 @@ class EMDMixup(Dataset):
     def _emd(self, data, label):
         f_0 = self._random_pick(label)
         d = load(f_0)
+
+        if self.pretransform is not None:
+            data = self.pretransform(data)
+            d = self.pretransform(d)
 
         data, d = match_length(data, d)
 
