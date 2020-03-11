@@ -11,7 +11,6 @@ class RandomNoise(object):
     def __init__(self,
                 power: Union[float, List[float]]=.0):
         self.power: Union[float, List[float]] = power
-        self._randamize_params()
 
     def _randamize_params(self):
         if type(self.power) is not list or len(self.power) < 2: # if rate given is float
@@ -23,6 +22,7 @@ class RandomNoise(object):
         self.power = self._rand_float(self.power[0], self.power[1])
 
     def __call__(self, data):
+        self._randamize_params()
         return Noise(self.power)(data)
 
     def _rand_float(self, low, high):

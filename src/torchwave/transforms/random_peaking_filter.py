@@ -20,7 +20,6 @@ class RandomPeakingFilter(object):
         self.gain: Union[float, List[float]] = gain
         self.fs: int = fs
         self.normalize: bool = True
-        self._randamize_params()
 
     def _randamize_params(self):
         if type(self.f) is not list or len(self.f) < 2: # if f given is float
@@ -38,6 +37,7 @@ class RandomPeakingFilter(object):
         self.gain = self._rand_float(self.gain[0], self.gain[1])
 
     def __call__(self, data):
+        self._randamize_params()
         return PeakingFilter(self.f,
                              self.q,
                              self.gain,

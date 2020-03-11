@@ -15,9 +15,10 @@ class PeakingFilter(object):
         self.gain: float = gain
         self.fs: int = fs
         self.normalize: bool = True
-        self.filter = self._peaking_eq(self.q, self.gain, self.f, self.fs)
+        self.filter = None
 
     def __call__(self, data):
+        self.filter = self._peaking_eq(self.q, self.gain, self.f, self.fs)
         filtered = self._apply(self.filter[0], self.filter[1], data)
         if self.normalize is True:
             filtered = Normalize()(filtered)

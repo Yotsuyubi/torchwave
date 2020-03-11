@@ -11,7 +11,6 @@ class RandomClip(object):
     def __init__(self,
                 m: Union[float, List[float]]=1.0):
         self.m: Union[float, List[float]] = m
-        self._randamize_params()
 
     def _randamize_params(self):
         if type(self.m) is not list or len(self.m) < 2: # if rate given is float
@@ -23,6 +22,7 @@ class RandomClip(object):
         self.m = self._rand_float(self.m[0], self.m[1])
 
     def __call__(self, data):
+        self._randamize_params()
         return Clip(self.m)(data)
 
     def _rand_float(self, low, high):
