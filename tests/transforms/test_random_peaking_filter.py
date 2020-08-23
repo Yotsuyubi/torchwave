@@ -1,3 +1,6 @@
+import sys
+sys.path.append('src')
+
 from torchwave.transforms import RandomPeakingFilter
 import numpy as np
 import pytest
@@ -22,6 +25,3 @@ def test_process_RandomPeakingFilter():
         RandomPeakingFilter([100, 1000, 0], [1, 3], [-5, 3])(noise)
         RandomPeakingFilter([100, 1000], [1, 3, 0], [-5, 3])(noise)
         RandomPeakingFilter([100, 1000], [1, 3], [-5, 3, 0])(noise)
-
-    with pytest.raises(TypeError):
-        RandomPeakingFilter([100, 1000], [3], [-5, 3])

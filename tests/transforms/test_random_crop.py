@@ -1,3 +1,6 @@
+import sys
+sys.path.append('src')
+
 from torchwave.transforms import RandomCrop
 import numpy as np
 import pytest

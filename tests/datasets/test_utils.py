@@ -1,3 +1,6 @@
+import sys
+sys.path.append('src')
+
 from torchwave.datasets.utils import load, download_file, safe_path, extract
 import numpy as np
 import scipy.io.wavfile as siw

@@ -1,3 +1,6 @@
+import sys
+sys.path.append('src')
+
 from torchwave.utils import save_audio
 from torchwave.datasets.utils import load
 import torch

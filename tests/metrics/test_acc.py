@@ -1,3 +1,6 @@
+import sys
+sys.path.append('src')
+
 from torchwave.metrics import acc
 import numpy as np
 import torch

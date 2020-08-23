@@ -22,11 +22,11 @@ class RandomPeakingFilter(object):
         self.normalize: bool = True
 
     def _randamize_params(self):
-        if type(self.f) is not list or len(self.f) < 2: # if f given is float
+        if type(self.f) is not list or len(self.f) < 2: # if f given float
             self.f = [0, self.f]
-        if type(self.q) is not list or len(self.q) < 2: # if q given is float
+        if type(self.q) is not list or len(self.q) < 2: # if q given float
             self.q = [0.01, self.q]
-        if type(self.gain) is not list or len(self.gain) < 2: # if gain given is float
+        if type(self.gain) is not list or len(self.gain) < 2: # if gain given float
             self.gain = [-self.gain, self.gain]
 
         if len(self.f) > 2 or len(self.q) > 2 or len(self.gain) > 2:

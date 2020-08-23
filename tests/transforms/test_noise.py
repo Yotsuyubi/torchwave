@@ -1,3 +1,6 @@
+import sys
+sys.path.append('src')
+
 from torchwave.transforms import Noise
 import numpy as np
 import pytest

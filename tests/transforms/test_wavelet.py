@@ -1,3 +1,6 @@
+import sys
+sys.path.append('src')
+
 from torchwave.transforms.wavelet import Wavelet
 import numpy as np
 import pytest

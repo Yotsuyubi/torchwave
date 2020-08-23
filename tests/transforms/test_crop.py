@@ -1,3 +1,6 @@
+import sys
+sys.path.append('src')
+
 from torchwave.transforms.crop import Crop
 import numpy as np
 import pytest

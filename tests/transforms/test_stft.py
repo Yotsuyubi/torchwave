@@ -1,3 +1,6 @@
+import sys
+sys.path.append('src')
+
 from torchwave.transforms.stft import STFT
 import numpy as np
 import pytest
